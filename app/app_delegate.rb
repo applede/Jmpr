@@ -14,14 +14,16 @@ class AppDelegate
       backing: NSBackingStoreBuffered,
       defer: false)
     @mainWindow.title = NSBundle.mainBundle.infoDictionary['CFBundleName']
-    @playerView = PlayerView.alloc.initWithFrame([[0, 0], [480, 360]])
-    @mainWindow.contentView = @playerView
-    @mainWindow.delegate = @playerView
+    # @playerView = PlayerView.alloc.initWithFrame([[0, 0], [480, 360]])
+    # @mainWindow.contentView = @playerView
     @mainWindow.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary
+    # @mainWindow.makeFirstResponder(@playerView)
+    @controller = HomeController.alloc.initWindow(@mainWindow)
+    @controller.activate
+    @mainWindow.delegate = @controller
     @mainWindow.orderFrontRegardless
-    @mainWindow.makeFirstResponder(@playerView)
     # @mainWindow.toggleFullScreen(self)
 
-    @playerView.open('/Users/apple/hobby/test_jamp/movie/5 Centimeters Per Second (2007)/5 Centimeters Per Second.mkv')
+    # @playerView.open('/Users/apple/hobby/test_jamp/movie/5 Centimeters Per Second (2007)/5 Centimeters Per Second.mkv')
   end
 end
