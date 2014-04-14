@@ -29,7 +29,7 @@ class MediaControlLayer < BlurLayer
     @images = imageNames.map { |names|
       [NSImage.imageNamed(names[OFF]), NSImage.imageNamed(names[ON])]
     }
-    @buttons = @images.map { |images|
+    @buttons = @images[0..-2].map { |images|
       button = CALayer.layer
       button.contents = images[OFF]
       button.anchorPoint = [0, 0]

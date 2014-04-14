@@ -20,7 +20,11 @@ class PlayerView < NSView
     self
   end
 
-  def viewDidChangeBackingPropertiesNotWorking
+  def method_missing(name, *args)
+    p name
+  end
+
+  def viewDidChangeBackingProperties
     f = self.window.backingScaleFactor
     @subtitle.contentsScale = f
     @mediaControl.contentsScale = f
@@ -103,7 +107,7 @@ class PlayerView < NSView
   end
 
   def windowDidResize(notification)
-    @resizing = NO
+    @resizing = false
     self.frameChanged
   end
 
@@ -130,11 +134,11 @@ class PlayerView < NSView
   def keyDown(theEvent)
     chars = theEvent.charactersIgnoringModifiers
     case chars.characterAtIndex(0)
-    when 'm'
+    when 109 # m
       @handler.menuPressed
-    when '\r'
+    when 13 # \r
       @handler.enterPressed
-    when ' '
+    when 32 # space
       self.spacePressed
     when NSLeftArrowFunctionKey
       @handler.leftPressed

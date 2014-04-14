@@ -9,16 +9,19 @@ class AppDelegate
   end
 
   def buildWindow
-    @mainWindow = NSWindow.alloc.initWithContentRect([[240, 180], [480, 360]],
+    @mainWindow = NSWindow.alloc.initWithContentRect([[240, 180], [960, 540]],
       styleMask: NSTitledWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask,
       backing: NSBackingStoreBuffered,
       defer: false)
     @mainWindow.title = NSBundle.mainBundle.infoDictionary['CFBundleName']
-    playerView = PlayerView.alloc.initWithFrame([[0, 0], [480, 360]])
-    @mainWindow.delegate = playerView
-    @mainWindow.contentView = playerView
+    @playerView = PlayerView.alloc.initWithFrame([[0, 0], [480, 360]])
+    @mainWindow.contentView = @playerView
+    @mainWindow.delegate = @playerView
+    @mainWindow.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary
     @mainWindow.orderFrontRegardless
+    @mainWindow.makeFirstResponder(@playerView)
+    # @mainWindow.toggleFullScreen(self)
 
-    playerView.open('/Users/apple/hobby/test_jamp/movie/5 Centimeters Per Second (2007)/5 Centimeters Per Second.mkv')
+    @playerView.open('/Users/apple/hobby/test_jamp/movie/5 Centimeters Per Second (2007)/5 Centimeters Per Second.mkv')
   end
 end
