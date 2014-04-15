@@ -2,7 +2,7 @@ class HomeView < BaseView
   def initWithFrame(frame)
     super
     @bar = BlurLayer.layer
-    @bar.anchorPoint = [0, 0]
+    @bar.anchorPoint = CGPointMake(0, 0)
     @layers = []
     @current = 0
     didResize
@@ -11,7 +11,6 @@ class HomeView < BaseView
   end
 
   def sections=(sections)
-    puts 'sections='
     @current = 0
     @sections = sections
     @layers = @sections.map do |section|
@@ -25,7 +24,6 @@ class HomeView < BaseView
       layer
     end
     didResize
-    setLayerPositions
     select(@current)
   end
 

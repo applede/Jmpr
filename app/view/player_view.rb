@@ -69,7 +69,7 @@ class PlayerView < NSView
       CATransaction.begin
       CATransaction.setDisableActions(true)
 
-      mySetConstraints(@subtitle, [CAConstraint.constraintWithAttribute(KCAConstraintMidX,
+      setConstraints(@subtitle, [CAConstraint.constraintWithAttribute(KCAConstraintMidX,
         relativeTo:'superlayer',
         attribute:KCAConstraintMidX),
       CAConstraint.constraintWithAttribute(KCAConstraintMinY,

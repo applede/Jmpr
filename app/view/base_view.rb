@@ -12,10 +12,16 @@ class BaseView < NSView
   end
 
   def viewDidChangeBackingProperties
-    puts 'viewDidChangeBackingProperties'
     f = self.window.backingScaleFactor
-    self.layer.sublayers.each do |layer|
-      layer.contentsScale = f
+    setSublayerContentsScale(self.layer, f)
+  end
+
+  def setSublayerContentsScale(layer, f)
+    if layer.sublayers
+      layer.sublayers.each do |sublayer|
+        sublayer.contentsScale = f
+        setSublayerContentsScale(sublayer, f)
+      end
     end
   end
 
