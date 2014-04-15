@@ -1,5 +1,5 @@
 class HomeController < BaseController
-  def initWindow(window)
+  def init
     super
     @sections = [
       Section.alloc.initName('영화', ['/Users/apple/hobby/test_jamp/movie']),
@@ -7,18 +7,17 @@ class HomeController < BaseController
       Section.alloc.initName('음악', []),
       Section.alloc.initName('설정', [])
     ]
+    @view.items = @sections
     self
   end
 
   def activate
-    unless @view
-      @view = HomeView.alloc.initWithFrame(@window.contentView.frame)
-      @view.sections = @sections
-    end
-    @window.delegate = self
-    @window.contentView = @view
-    @window.makeFirstResponder(@view)
+    super
     showRandomFanart
+  end
+
+  def makeView(frame)
+    HomeView.alloc.initWithFrame(frame)
   end
 
   def showRandomFanart
@@ -32,5 +31,11 @@ class HomeController < BaseController
     Dispatch::Queue.main.after(delay) do
       showRandomFanart
     end
+  end
+
+  def enterPressed
+    @listController = ListController.alloc.init unless @listController
+    @listController.section = @sections[@view.current]
+    MasterController.push(@listController)
   end
 end

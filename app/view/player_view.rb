@@ -6,29 +6,25 @@
 #  Copyright (c) 2014 Jake Song. All rights reserved.
 #
 
-class PlayerView < NSView
+class VideoPlayerView < BaseView
   def initWithFrame(frame)
     super
     self.setWantsBestResolutionOpenGLSurface(true)
-    @glLayer = MyOpenGLLayer.layer
-    self.setLayer(@glLayer)
-    self.setWantsLayer(true)
-    self.setLayerUsesCoreImageFilters(true)
+    @glLayer = self.layer
+    # @glLayer = MyOpenGLLayer.layer
+    # self.setLayer(@glLayer)
+    # self.setWantsLayer(true)
+    # self.setLayerUsesCoreImageFilters(true)
     self.setLayerContentsRedrawPolicy(NSViewLayerContentsRedrawDuringViewResize)
+    # @glLayer.frame = frame
+    # self.layer.addSublayer(@glLayer)
     self.makeSublayers
     @handler = self
     self
   end
 
-  def method_missing(name, *args)
-    p name
-  end
-
-  def viewDidChangeBackingProperties
-    f = self.window.backingScaleFactor
-    @subtitle.contentsScale = f
-    @mediaControl.contentsScale = f
-    super
+  def makeBackingLayer
+    MyOpenGLLayer.layer
   end
 
   def makeSublayers
@@ -37,11 +33,11 @@ class PlayerView < NSView
     @subtitle.alignmentMode = KCAAlignmentCenter
     @subtitle.font = 'HelveticaNeue-Light'
     @subtitle.shadowOpacity = 1.0
-    @subtitle.shadowOffset = [0.0, -1.0]
+    @subtitle.shadowOffset = CGSizeMake(0.0, -1.0)
 
     @mediaControl = MediaControlLayer.layer
     @mediaControl.view = self
-    @mediaControl.anchorPoint = [0, 0]
+    @mediaControl.anchorPoint = CGPointMake(0, 0)
 
     self.layer.layoutManager = CAConstraintLayoutManager.layoutManager
     self.layer.addSublayer(@subtitle)
@@ -52,7 +48,7 @@ class PlayerView < NSView
     return NSNull.null
   end
 
-  def frameChanged
+  def didResize
     if @glLayer.frameChanged
       s = @glLayer.contentsScale
       h = @glLayer.movieRect.size.height / s
@@ -97,7 +93,7 @@ class PlayerView < NSView
   def open(path)
     @glLayer.subtitleDelegate = self
     @glLayer.open(path)
-    self.frameChanged
+    self.didResize
   end
 
   def windowWillResize(sender, toSize:frameSize)
@@ -108,7 +104,7 @@ class PlayerView < NSView
 
   def windowDidResize(notification)
     @resizing = false
-    self.frameChanged
+    self.didResize
   end
 
   def displaySubtitle
@@ -194,5 +190,8 @@ class PlayerView < NSView
 
   def play
     @glLayer.decoder.play
+  end
+
+  def slideIn
   end
 end

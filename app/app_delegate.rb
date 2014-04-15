@@ -18,9 +18,7 @@ class AppDelegate
     # @mainWindow.contentView = @playerView
     @mainWindow.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary
     # @mainWindow.makeFirstResponder(@playerView)
-    @controller = HomeController.alloc.initWindow(@mainWindow)
-    @controller.activate
-    @mainWindow.delegate = @controller
+    @controller = MasterController.alloc.initWindow(@mainWindow)
     @mainWindow.orderFrontRegardless
     # @mainWindow.toggleFullScreen(self)
 

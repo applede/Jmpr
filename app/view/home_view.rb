@@ -10,13 +10,14 @@ class HomeView < BaseView
     self
   end
 
-  def sections=(sections)
+  def items=(items)
     @current = 0
-    @sections = sections
-    @layers = @sections.map do |section|
+    @items = items
+    @bar.sublayers = nil
+    @layers = @items.map do |item|
       layer = CATextLayer.layer
       layer.anchorPoint = CGPointMake(0, 0)
-      layer.string = section.name
+      layer.string = item.name
       layer.foregroundColor = NSColor.blackColor.CGColor
       layer.font = "HelveticaNeue-Light"
       layer.alignmentMode = KCAAlignmentCenter
@@ -35,27 +36,6 @@ class HomeView < BaseView
     moveSelection(1)
   end
 
-  def moveSelection(dir)
-    unselect(@current)
-    @current = (@current + dir) % @sections.length
-    setLayerPositions
-    select(@current)
-  end
-
-  def select(i)
-    layer = @layers[i]
-    layer.foregroundColor = NSColor.whiteColor.CGColor
-    layer.shadowColor = NSColor.whiteColor.CGColor
-    layer.shadowOpacity = 1.0
-    layer.shadowOffset = CGSizeMake(0, 0)
-  end
-
-  def unselect(i)
-    layer = @layers[i]
-    layer.foregroundColor = NSColor.blackColor.CGColor
-    layer.shadowOpacity = 0.0
-  end
-
   def setLayerPositions
     x = (self.bounds.size.width - @sectionWidth) / 2 - @current * @sectionWidth
     @layers.each do |layer|
@@ -68,29 +48,11 @@ class HomeView < BaseView
     @current
   end
 
-  def showFanart(path)
-    image = NSImage.alloc.initByReferencingFile(path)
-    rep = image.representations[0]
-    if rep.pixelsWide != rep.size.width
-      size = NSMakeSize(rep.pixelsWide, rep.pixelsHigh)
-      newImage = NSImage.alloc.initWithSize(size)
-      newImage.lockFocus
-      image.drawInRect(NSMakeRect(0, 0, size.width, size.height))
-      newImage.unlockFocus
-      image = newImage
-    end
-    self.layer.contents = image
-    crossfade = CABasicAnimation.animationWithKeyPath('contents')
-    crossfade.duration = 0.5
-    crossfade.removedOnCompletion = true
-    self.layer.addAnimation(crossfade, forKey: nil)
-  end
-
   def didResize
     size = self.bounds.size
     @sectionHeight = size.height * 160 / 1080
     @sectionWidth = size.width * 400 / 1920
-    y = @sectionHeight
+    y = @in ? @sectionHeight : -@sectionHeight
     @bar.frame = CGRectMake(0, y, size.width, @sectionHeight)
     x = (size.width - @sectionWidth) / 2
     @layers.each do |layer|
@@ -99,5 +61,14 @@ class HomeView < BaseView
       x += @sectionWidth
     end
     setLayerPositions
+  end
+
+  def slideOutSub
+    @bar.position = CGPointMake(0, -@sectionHeight)
+  end
+
+  def slideIn
+    @bar.position = CGPointMake(0, @sectionHeight)
+    @in = true
   end
 end

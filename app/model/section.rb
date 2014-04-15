@@ -10,6 +10,34 @@ class Section < NSObject
     @name
   end
 
+  def items
+    @items
+  end
+
+  def withItems(&block)
+    if @items
+      block.call(@items)
+    else
+      scanItems(block)
+    end
+  end
+
+  def scanItems(&block)
+    scanQue.async do
+      @items = []
+      @folders.each do |folder|
+        Dir.foreach(folder) do |fo|
+          unless fo[0] == '.'
+            @items << Movie.alloc.initPath(File.join(folder, fo))
+          end
+        end
+      end
+      Dispatch::Queue.main.async {
+        block.call(@items)
+      }
+    end
+  end
+
   def randomFanart
     if @items
       if @items.length > 0
@@ -18,16 +46,7 @@ class Section < NSObject
         nil
       end
     else
-      Dispatch::Queue.new('jmpr.scan').async do
-        @items = []
-        @folders.each do |folder|
-          Dir.foreach(folder) do |fo|
-            unless fo[0] == '.'
-              @items << Movie.alloc.initPath(File.join(folder, fo))
-            end
-          end
-        end
-      end
+      scanItems {}
       nil
     end
   end

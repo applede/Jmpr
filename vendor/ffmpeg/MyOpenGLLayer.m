@@ -27,14 +27,14 @@
 - (void)initGL:(NSOpenGLContext*)ctx
 {
   [ctx makeCurrentContext];
-	
+
 	// Synchronize buffer swaps with vertical refresh rate
 	GLint swapInt = 1;
 	[ctx setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
-	
+
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	
+
   glGenBuffers(1, &buffer_);
   glBindBuffer(GL_ARRAY_BUFFER, buffer_);
   glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(GLfloat), NULL, GL_STATIC_DRAW);
@@ -82,10 +82,10 @@
   CGFloat s = self.contentsScale;
   GLfloat vw = rect.size.width * s;
   GLfloat vh = rect.size.height * s;
-	
+
   [_decoder.videoTrack viewWidth:vw height:vh];
   [self calcRect];
-  
+
   GLfloat x0 = _movieRect.origin.x;
   GLfloat y0 = _movieRect.origin.y;
   GLfloat x1 = _movieRect.origin.x + _movieRect.size.width;
@@ -106,7 +106,7 @@
   CGFloat s = self.contentsScale;
   bounds.size.width *= s;
   bounds.size.height *= s;
-  
+
   int srcW = _decoder.videoTrack.width;
   int srcH = _decoder.videoTrack.height;
   GLfloat viewW = bounds.size.width;
@@ -121,7 +121,7 @@
     dstH = viewW * srcH / srcW;
     dstW = viewW;
   }
-  
+
   _movieRect.origin.x = (viewW - dstW) / 2;
   _movieRect.origin.y = (viewH - dstH) / 2;
   _movieRect.size.width = dstW;

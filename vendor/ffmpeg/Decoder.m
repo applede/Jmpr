@@ -110,7 +110,7 @@
 {
   AVCodecContext *avctx = _formatContext->streams[i]->codec;
   AVCodec *codec = avcodec_find_decoder(avctx->codec_id);
-  
+
   avctx->codec_id = codec->id;
   avctx->workaround_bugs = 1;
   av_codec_set_lowres(avctx, 0);
@@ -161,7 +161,7 @@ NSString* smiPath(NSString* path)
   } else {
     _videoTrack = [[VideoTrackCPU alloc] initDecoder:self stream:[self openStream:_videoStream]];
   }
-  
+
   _audioStream = av_find_best_stream(_formatContext, AVMEDIA_TYPE_AUDIO, -1, _videoStream, NULL, 0);
   _audioTrack = [[AudioTrack alloc] initDecoder:self stream:[self openStream:_audioStream]];
   [_audioTrack prepare];
@@ -177,7 +177,7 @@ NSString* smiPath(NSString* path)
                                           NULL, 0);
     _subtitleTrack = [[SubtitleTrackEmbed alloc] initDecoder:self stream:[self openStream:_subtitleStream]];
   }
- 
+
   return YES;
 }
 
