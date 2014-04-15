@@ -99,4 +99,7 @@ class BaseView < NSView
     CATransaction.commit
     @in = false
   end
+
+  def willResize
+  end
 end

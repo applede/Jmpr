@@ -8,9 +8,7 @@ class PlayController < BaseController
   end
 
   def activate
+    @view.path = @item.videoPath
     super
-    Dispatch::Queue.main.async {
-      @view.open(@item.videoPath)
-    }
   end
 end

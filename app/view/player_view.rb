@@ -11,13 +11,7 @@ class VideoPlayerView < BaseView
     super
     self.setWantsBestResolutionOpenGLSurface(true)
     @glLayer = self.layer
-    # @glLayer = MyOpenGLLayer.layer
-    # self.setLayer(@glLayer)
-    # self.setWantsLayer(true)
-    # self.setLayerUsesCoreImageFilters(true)
     self.setLayerContentsRedrawPolicy(NSViewLayerContentsRedrawDuringViewResize)
-    # @glLayer.frame = frame
-    # self.layer.addSublayer(@glLayer)
     self.makeSublayers
     @handler = self
     self
@@ -29,7 +23,6 @@ class VideoPlayerView < BaseView
 
   def makeSublayers
     @subtitle = CATextLayer.layer
-    @subtitle.delegate = self
     @subtitle.alignmentMode = KCAAlignmentCenter
     @subtitle.font = 'HelveticaNeue-Light'
     @subtitle.shadowOpacity = 1.0
@@ -44,11 +37,8 @@ class VideoPlayerView < BaseView
     self.layer.addSublayer(@mediaControl)
   end
 
-  def actionForLayer(layer, forKey:event)
-    return NSNull.null
-  end
-
   def didResize
+    @resizing = false
     if @glLayer.frameChanged
       s = @glLayer.contentsScale
       h = @glLayer.movieRect.size.height / s
@@ -65,18 +55,11 @@ class VideoPlayerView < BaseView
       CATransaction.begin
       CATransaction.setDisableActions(true)
 
-      setConstraints(@subtitle, [CAConstraint.constraintWithAttribute(KCAConstraintMidX,
-        relativeTo:'superlayer',
-        attribute:KCAConstraintMidX),
-      CAConstraint.constraintWithAttribute(KCAConstraintMinY,
-        relativeTo:'superlayer',
-        attribute:KCAConstraintMinY, offset:y)])
-        # @subtitle.setConstraints([CAConstraint.constraintWithAttribute(KCAConstraintMidX,
-        #   relativeTo:'superlayer',
-        #   attribute:KCAConstraintMidX),
-        # CAConstraint.constraintWithAttribute(KCAConstraintMinY,
-        #   relativeTo:'superlayer',
-        #   attribute:KCAConstraintMinY, offset:y)])
+      setConstraints(@subtitle, [
+        CAConstraint.constraintWithAttribute(KCAConstraintMidX, relativeTo:'superlayer',
+          attribute:KCAConstraintMidX),
+        CAConstraint.constraintWithAttribute(KCAConstraintMinY, relativeTo:'superlayer',
+          attribute:KCAConstraintMinY, offset:y)])
       mh = self.bounds.size.height * 128.0 / 1080.0
       @mediaControl.bounds = [[0, 0], [self.bounds.size.width, mh]]
       if @handler == @mediaControl
@@ -90,27 +73,23 @@ class VideoPlayerView < BaseView
     end
   end
 
-  def open(path)
+  def path=(path)
+    @path = path
+  end
+
+  def slideIn
     @glLayer.subtitleDelegate = self
-    @glLayer.open(path)
+    @glLayer.open(@path)
     self.didResize
   end
 
-  def windowWillResize(sender, toSize:frameSize)
+  def willResize
     @resizing = true
     @subtitle.string = ''
-    frameSize
-  end
-
-  def windowDidResize(notification)
-    @resizing = false
-    self.didResize
   end
 
   def displaySubtitle
-    if @resizing
-      return
-    end
+    return if @resizing
 
     newString = @glLayer.decoder.subtitleString
     if newString
@@ -127,24 +106,24 @@ class VideoPlayerView < BaseView
     end
   end
 
-  def keyDown(theEvent)
-    chars = theEvent.charactersIgnoringModifiers
-    case chars.characterAtIndex(0)
-    when 109 # m
-      @handler.menuPressed
-    when 13 # \r
-      @handler.enterPressed
-    when 32 # space
-      self.spacePressed
-    when NSLeftArrowFunctionKey
-      @handler.leftPressed
-    when NSRightArrowFunctionKey
-      @handler.rightPressed
-    when 27
-      @handler.escPressed
-    else
-    end
-  end
+  # def keyDown(theEvent)
+  #   chars = theEvent.charactersIgnoringModifiers
+  #   case chars.characterAtIndex(0)
+  #   when 109 # m
+  #     @handler.menuPressed
+  #   when 13 # \r
+  #     @handler.enterPressed
+  #   when 32 # space
+  #     self.spacePressed
+  #   when NSLeftArrowFunctionKey
+  #     @handler.leftPressed
+  #   when NSRightArrowFunctionKey
+  #     @handler.rightPressed
+  #   when 27
+  #     @handler.escPressed
+  #   else
+  #   end
+  # end
 
   def menuPressed
     self.layer.addSublayer(@mediaControl)
@@ -152,13 +131,13 @@ class VideoPlayerView < BaseView
     @handler = @mediaControl
   end
 
-  def enterPressed
-    self.window.toggleFullScreen(self)
-  end
+  # def enterPressed
+  #   self.window.toggleFullScreen(self)
+  # end
 
-  def escPressed
-    self.window.toggleFullScreen(self)
-  end
+  # def escPressed
+  #   self.window.toggleFullScreen(self)
+  # end
 
   def spacePressed
     if @glLayer.decoder.isPlaying
@@ -176,10 +155,6 @@ class VideoPlayerView < BaseView
     @glLayer.decoder.seek(10.0)
   end
 
-  def acceptsFirstResponder
-    return true
-  end
-
   def takeFocus
     @handler = self
   end
@@ -190,8 +165,5 @@ class VideoPlayerView < BaseView
 
   def play
     @glLayer.decoder.play
-  end
-
-  def slideIn
   end
 end

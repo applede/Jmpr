@@ -10,6 +10,11 @@ class BaseController < NSObject
     @view
   end
 
+  def windowWillResize(sender, toSize:size)
+    @view.willResize
+    size
+  end
+
   def windowDidResize(notification)
     @view.didResize
   end
