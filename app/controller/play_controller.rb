@@ -11,4 +11,9 @@ class PlayController < BaseController
     @view.path = @item.videoPath
     super
   end
+
+  def escPressed
+    @view.pause
+    super
+  end
 end

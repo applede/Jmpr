@@ -13,7 +13,7 @@ class VideoPlayerView < BaseView
     @glLayer = self.layer
     self.setLayerContentsRedrawPolicy(NSViewLayerContentsRedrawDuringViewResize)
     self.makeSublayers
-    @handler = self
+    @controlShown = false
     self
   end
 
@@ -62,10 +62,10 @@ class VideoPlayerView < BaseView
           attribute:KCAConstraintMinY, offset:y)])
       mh = self.bounds.size.height * 128.0 / 1080.0
       @mediaControl.bounds = [[0, 0], [self.bounds.size.width, mh]]
-      if @handler == @mediaControl
-        @mediaControl.position = [0, 0]
+      if @controlShown
+        @mediaControl.position = CGPointMake(0, 0)
       else
-        @mediaControl.position = [0, -mh]
+        @mediaControl.position = CGPointMake(0, -mh)
       end
       self.layer.setNeedsLayout
 
@@ -126,9 +126,14 @@ class VideoPlayerView < BaseView
   # end
 
   def menuPressed
-    self.layer.addSublayer(@mediaControl)
-    @mediaControl.position = [0, 0]
-    @handler = @mediaControl
+    if @controlShown
+      @mediaControl.menuPressed
+      @controlShown = false
+    else
+      self.layer.addSublayer(@mediaControl)
+      @mediaControl.position = CGPointMake(0, 0)
+      @controlShown = true
+    end
   end
 
   # def enterPressed
@@ -148,15 +153,19 @@ class VideoPlayerView < BaseView
   end
 
   def leftPressed
-    @glLayer.decoder.seek(-10.0)
+    if @controlShown
+      @mediaControl.leftPressed
+    else
+      @glLayer.decoder.seek(-10.0)
+    end
   end
 
   def rightPressed
-    @glLayer.decoder.seek(10.0)
-  end
-
-  def takeFocus
-    @handler = self
+    if @controlShown
+      @mediaControl.rightPressed
+    else
+      @glLayer.decoder.seek(10.0)
+    end
   end
 
   def pause
@@ -165,5 +174,8 @@ class VideoPlayerView < BaseView
 
   def play
     @glLayer.decoder.play
+  end
+
+  def slideOutSub
   end
 end
