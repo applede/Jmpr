@@ -54,13 +54,13 @@ typedef struct {
 
 - (id)initDecoder:(Decoder*)decoder stream:(AVStream *)stream;
 
+- (void)start;
 - (void)stop;
 - (BOOL)isPlaying;
 - (void)play;
 - (void)pause;
 
 - (BOOL)prepare;
-- (void)close;
 
 - (double)clock;
 

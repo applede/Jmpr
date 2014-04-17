@@ -18,6 +18,7 @@
   BOOL _quit;
   Decoder* _decoder;
   AVStream* _stream;
+  dispatch_queue_t _q;
   dispatch_semaphore_t _sema;
 
   GLuint _program;
@@ -41,6 +42,7 @@
 - (void)draw;
 
 - (void)start;
+- (void)stop;
 - (void)checkQue;
 - (BOOL)canContinue;
 - (void)flush;

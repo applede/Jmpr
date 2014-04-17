@@ -21,6 +21,7 @@
 
 - (id)initDecoder:(Decoder*)decoder stream:(AVStream*)stream;
 - (void)start;
+- (void)stop;
 - (void)checkQue;
 - (int)encoding;
 

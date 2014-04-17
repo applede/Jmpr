@@ -13,6 +13,7 @@
 {
   BOOL _quit;
   CircularQueue* _frameQue;
+  dispatch_queue_t _q;
   dispatch_semaphore_t _sema;
 }
 

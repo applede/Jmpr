@@ -59,4 +59,10 @@
   return kCFStringEncodingDOSKorean;
 }
 
+- (void)start
+{
+  _current = 0;
+  _lastTime = 0;
+}
+
 @end

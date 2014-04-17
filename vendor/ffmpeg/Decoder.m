@@ -30,14 +30,15 @@
   return self;
 }
 
-- (void)open:(NSString *)p
+- (void)open:(NSString *)p openGL:(CGLContextObj)cgl
 {
   _path = p;
   _quit = NO;
   [self readThread];
   [_videoTrack start];
-  [_audioTrack play];
+  [_audioTrack start];
   [_subtitleTrack start];
+  [_videoTrack prepare:cgl];
 }
 
 - (BOOL)isPlaying
@@ -58,7 +59,14 @@
 - (void)stop
 {
   _quit = YES;
+  dispatch_semaphore_signal(_readSema);
+  [_videoTrack stop];
   [_audioTrack stop];
+  [_subtitleTrack stop];
+
+  if (_formatContext) {
+    avformat_close_input(&_formatContext);
+  }
 }
 
 - (void)seek:(double)inc
@@ -92,7 +100,7 @@
 
 - (void)readThread
 {
-  if ([self internalOpen:_path]) {
+  if ([self open:_path]) {
     dispatch_async(_readQ, ^{
       while (!_quit) {
         @autoreleasepool {
@@ -100,9 +108,12 @@
           dispatch_semaphore_wait(_readSema, DISPATCH_TIME_FOREVER);
         }
       }
+      [_videoQue flush];
+      [_audioQue flush];
+      [_subtitleQue flush];
     });
   } else {
-    [self close];
+    [self stop];
   }
 }
 
@@ -141,7 +152,7 @@ NSString* smiPath(NSString* path)
   return smiPath;
 }
 
-- (BOOL)internalOpen:(NSString*)filename
+- (BOOL)open:(NSString*)filename
 {
   _formatContext = NULL;
   int err = avformat_open_input(&_formatContext, [filename UTF8String], NULL, NULL);
@@ -157,7 +168,8 @@ NSString* smiPath(NSString* path)
   _videoStream = av_find_best_stream(_formatContext, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
   AVCodecContext* context = _formatContext->streams[_videoStream]->codec;
   if (context->codec_id == AV_CODEC_ID_H264) {
-    _videoTrack = [[VideoTrackGPU alloc] initDecoder:self stream:_formatContext->streams[_videoStream]];
+    _videoTrack = [[VideoTrackGPU alloc] initDecoder:self
+                                              stream:_formatContext->streams[_videoStream]];
   } else {
     _videoTrack = [[VideoTrackCPU alloc] initDecoder:self stream:[self openStream:_videoStream]];
   }
@@ -168,14 +180,20 @@ NSString* smiPath(NSString* path)
 
   NSString* smiP = smiPath(_path);
   _subtitleTrack = [[SubtitleTrackSMI alloc] initDecoder:self
-                                                  stream:_formatContext->streams[_videoStream] path:smiP];
+                                                  stream:_formatContext->streams[_videoStream]
+                                                    path:smiP];
   if (_subtitleTrack) {
     _subtitleStream = -1;
   } else {
     _subtitleStream = av_find_best_stream(_formatContext, AVMEDIA_TYPE_SUBTITLE, -1,
                                           (_audioStream >= 0 ? _audioStream : _videoStream),
                                           NULL, 0);
-    _subtitleTrack = [[SubtitleTrackEmbed alloc] initDecoder:self stream:[self openStream:_subtitleStream]];
+    if (_subtitleStream >= 0) {
+      _subtitleTrack = [[SubtitleTrackEmbed alloc] initDecoder:self
+                                                        stream:[self openStream:_subtitleStream]];
+    } else {
+      _subtitleTrack = [[SubtitleTrack alloc] initDecoder:self stream:nil];
+    }
   }
 
   return YES;
@@ -218,14 +236,6 @@ NSString* smiPath(NSString* path)
       }
     }
   }
-}
-
-- (void)close
-{
-  if (_formatContext) {
-    avformat_close_input(&_formatContext);
-  }
-  [_audioTrack close];
 }
 
 - (void)checkQue

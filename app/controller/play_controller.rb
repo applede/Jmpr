@@ -13,7 +13,11 @@ class PlayController < BaseController
   end
 
   def escPressed
-    @view.pause
+    @view.stop
     super
+  end
+
+  def enterPressed
+    @view.enterPressed
   end
 end

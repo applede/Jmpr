@@ -9,7 +9,12 @@
 BUTTON_COUNT = 6
 OFF = 0
 ON = 1
+SKIP_BACKWARD = 0
+REWIND = 1
 PAUSE = 2
+STOP = 3
+FAST_FORWARD = 4
+SKIP_FORWARD = 5
 PLAY = 6
 
 class MediaControlLayer < BlurLayer
@@ -60,17 +65,17 @@ class MediaControlLayer < BlurLayer
     end
   end
 
-  def menuPressed
+  def hide
     NSAnimationContext.runAnimationGroup(->(ctx) {
-      self.position = [0, -self.bounds.size.height]
-      }, completionHandler:->{
-        self.removeFromSuperlayer
-        })
-    @view.takeFocus
+      self.position = CGPointMake(0, -self.bounds.size.height)
+    }, completionHandler:->{
+      self.removeFromSuperlayer
+    })
   end
 
   def enterPressed
-    if @current == PAUSE
+    case @current
+    when PAUSE
       @playing = !@playing
       if @playing
         @view.play
@@ -79,6 +84,8 @@ class MediaControlLayer < BlurLayer
         @view.pause
         @buttons[PAUSE].contents = @images[PLAY][ON]
       end
+    when STOP
+      @view.delegate.escPressed
     end
   end
 

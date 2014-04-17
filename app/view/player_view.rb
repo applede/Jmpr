@@ -75,6 +75,7 @@ class VideoPlayerView < BaseView
 
   def path=(path)
     @path = path
+    @subtitle.string = ''
   end
 
   def slideIn
@@ -127,7 +128,7 @@ class VideoPlayerView < BaseView
 
   def menuPressed
     if @controlShown
-      @mediaControl.menuPressed
+      @mediaControl.hide
       @controlShown = false
     else
       self.layer.addSublayer(@mediaControl)
@@ -145,10 +146,10 @@ class VideoPlayerView < BaseView
   # end
 
   def spacePressed
-    if @glLayer.decoder.isPlaying
-      @glLayer.decoder.pause
+    if @glLayer.isPlaying
+      @glLayer.pause
     else
-      @glLayer.decoder.play
+      @glLayer.play
     end
   end
 
@@ -168,12 +169,24 @@ class VideoPlayerView < BaseView
     end
   end
 
+  def enterPressed
+    if @controlShown
+      @mediaControl.enterPressed
+    else
+      spacePressed
+    end
+  end
+
   def pause
-    @glLayer.decoder.pause
+    @glLayer.pause
   end
 
   def play
-    @glLayer.decoder.play
+    @glLayer.play
+  end
+
+  def stop
+    @glLayer.stop
   end
 
   def slideOutSub

@@ -19,6 +19,7 @@
 {
   self = [super initDecoder:decoder stream:stream];
   if (self) {
+    _q = dispatch_queue_create("jap.subtitle.embedded", DISPATCH_QUEUE_SERIAL);
     _sema = dispatch_semaphore_create(0);
     _frameQue = [[CircularQueue alloc] initSize:QSIZE];
     for (int i = 0; i < QSIZE; i++) {
@@ -30,8 +31,7 @@
 
 - (void)start
 {
-  dispatch_queue_t q = dispatch_queue_create("jap.subtitle.embedded", DISPATCH_QUEUE_SERIAL);
-  dispatch_async(q, ^{
+  dispatch_async(_q, ^{
     int got_subtitle;
     double pts;
     
@@ -63,6 +63,12 @@
       }
     }
   });
+}
+
+- (void)stop
+{
+  _quit = YES;
+  dispatch_semaphore_signal(_sema);
 }
 
 - (BOOL)canContinue

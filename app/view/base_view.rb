@@ -31,6 +31,10 @@ class BaseView < NSView
     @delegate = delegate
   end
 
+  def delegate
+    @delegate
+  end
+
   def keyDown(event)
     chars = event.charactersIgnoringModifiers
     case chars.characterAtIndex(0)

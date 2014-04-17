@@ -130,9 +130,31 @@
 
 - (void)open:(NSString *)path
 {
-  [_decoder open:path];
-  [_decoder.videoTrack prepare:self.openGLContext.CGLContextObj];
+  [_decoder open:path openGL:self.openGLContext.CGLContextObj];
   self.asynchronous = YES;
+}
+
+- (void)pause
+{
+  [_decoder pause];
+  self.asynchronous = NO;
+}
+
+- (void)play
+{
+  [_decoder play];
+  self.asynchronous = YES;
+}
+
+- (void)stop
+{
+  [_decoder stop];
+  self.asynchronous = NO;
+}
+
+- (BOOL)isPlaying
+{
+  return [_decoder isPlaying];
 }
 
 @end

@@ -26,11 +26,6 @@
   return self;
 }
 
-- (void)stop
-{
-  [self pause];
-}
-
 - (void)play
 {
   _playing = YES;
@@ -60,9 +55,15 @@ static OSStatus audioCallback(void *inRefCon,
   return noErr;
 }
 
-- (void)close
+- (void)start
+{
+  [self play];
+}
+
+- (void)stop
 {
   if (_audioC) {
+    [self pause];
     if (AudioUnitUninitialize(_audioC) != 0) {
       NSLog(@"AudioUnitUninitialize");
     }

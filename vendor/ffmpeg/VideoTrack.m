@@ -16,6 +16,7 @@
 {
   self = [super init];
   if (self) {
+    _q = dispatch_queue_create("jap.video.decode", DISPATCH_QUEUE_SERIAL);
     _decoder = decoder;
     _stream = stream;
     _sema = dispatch_semaphore_create(0);
@@ -102,8 +103,7 @@ GLuint compileShader(GLenum type, const GLchar* src)
 
 - (void)start
 {
-  dispatch_queue_t q = dispatch_queue_create("jap.video.decode", DISPATCH_QUEUE_SERIAL);
-  dispatch_async(q, ^{
+  dispatch_async(_q, ^{
     while (!_quit) {
       @autoreleasepool {
         while ([self canContinue]) {
@@ -114,6 +114,12 @@ GLuint compileShader(GLenum type, const GLchar* src)
       }
     }
   });
+}
+
+- (void)stop
+{
+  _quit = YES;
+  dispatch_semaphore_signal(_sema);
 }
 
 - (void)checkQue

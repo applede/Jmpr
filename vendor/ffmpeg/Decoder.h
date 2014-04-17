@@ -42,17 +42,21 @@
 @property (readonly) VideoTrack* videoTrack;
 @property (readonly) SubtitleTrack* subtitleTrack;
 
-- (void)open:(NSString*)path;
+// open <-> stop should be matched
+- (void)open:(NSString*)path openGL:(CGLContextObj)cgl;
+- (void)stop;
 
-- (BOOL)isPlaying;
 - (void)play;
 - (void)pause;
+- (BOOL)isPlaying;
 
 - (void)seek:(double)inc;
 - (BOOL)supportsSeek;
 
 - (void)checkQue;
 - (double)masterClock;
+
+// @return nil means don't change current
 - (NSString*)subtitleString;
 
 @end
