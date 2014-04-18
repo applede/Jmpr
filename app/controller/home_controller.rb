@@ -1,13 +1,6 @@
 class HomeController < BaseController
   def init
     super
-    @sections = [
-      Section.alloc.initName('영화', ['/Users/apple/hobby/test_jamp/movie']),
-      Section.alloc.initName('TV', []),
-      Section.alloc.initName('음악', []),
-      Section.alloc.initName('설정', [])
-    ]
-    @view.items = @sections
     self
   end
 
@@ -35,7 +28,12 @@ class HomeController < BaseController
 
   def enterPressed
     @listController = ListController.alloc.init unless @listController
-    @listController.section = @sections[@view.current]
-    MasterController.push(@listController)
+    @listController.show(@sections[@view.current])
+  end
+
+  def show(sections)
+    @sections = sections
+    @view.items = @sections
+    super
   end
 end

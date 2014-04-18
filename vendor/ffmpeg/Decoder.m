@@ -30,15 +30,19 @@
   return self;
 }
 
-- (void)open:(NSString *)p openGL:(CGLContextObj)cgl
+- (BOOL)open:(NSString *)p openGL:(CGLContextObj)cgl
 {
   _path = p;
   _quit = NO;
-  [self readThread];
-  [_videoTrack start];
-  [_audioTrack start];
-  [_subtitleTrack start];
-  [_videoTrack prepare:cgl];
+  if ([self readThread]) {
+    [_videoTrack start];
+    [_audioTrack start];
+    [_subtitleTrack start];
+    [_videoTrack prepare:cgl];
+    return YES;
+  } else {
+    return NO;
+  }
 }
 
 - (BOOL)isPlaying
@@ -98,7 +102,7 @@
   return [_audioTrack clock];
 }
 
-- (void)readThread
+- (BOOL)readThread
 {
   if ([self open:_path]) {
     dispatch_async(_readQ, ^{
@@ -112,8 +116,10 @@
       [_audioQue flush];
       [_subtitleQue flush];
     });
+    return YES;
   } else {
     [self stop];
+    return NO;
   }
 }
 

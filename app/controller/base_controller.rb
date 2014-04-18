@@ -32,4 +32,8 @@ class BaseController < NSObject
   def escPressed
     MasterController.pop
   end
+
+  def show(something)
+    MasterController.push(self)
+  end
 end

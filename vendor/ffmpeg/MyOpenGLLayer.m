@@ -128,10 +128,13 @@
   _movieRect.size.height = dstH;
 }
 
-- (void)open:(NSString *)path
+- (BOOL)open:(NSString *)path
 {
-  [_decoder open:path openGL:self.openGLContext.CGLContextObj];
-  self.asynchronous = YES;
+  if ([_decoder open:path openGL:self.openGLContext.CGLContextObj]) {
+    self.asynchronous = YES;
+    return YES;
+  }
+  return NO;
 }
 
 - (void)pause

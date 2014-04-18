@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <OpenGL/OpenGL.h>
 #import <libavformat/avformat.h>
 
 @class Decoder;

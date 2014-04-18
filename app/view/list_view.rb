@@ -1,3 +1,10 @@
+#
+#  list view
+#
+#  Created by Jake Song on 2014-04-18.
+#  Copyright (c) 2014 Jake Song. All rights reserved.
+#
+
 class ListView < BaseView
   def initWithFrame(frame)
     super
@@ -15,12 +22,8 @@ class ListView < BaseView
     @items = items
     @list.sublayers = nil
     @layers = @items.map do |item|
-      layer = CATextLayer.layer
-      layer.anchorPoint = CGPointMake(0, 0)
+      layer = newLeftTextLayer
       layer.string = item.name
-      layer.foregroundColor = NSColor.blackColor.CGColor
-      layer.font = "HelveticaNeue-Light"
-      layer.alignmentMode = KCAAlignmentLeft
       @list.addSublayer(layer)
       layer
     end

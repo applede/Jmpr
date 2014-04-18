@@ -26,7 +26,7 @@
 @property (readonly) CGRect movieRect;
 @property (weak) id<SubtitleDelegate> subtitleDelegate;
 
-- (void)open:(NSString*)path;
+- (BOOL)open:(NSString*)path;
 - (BOOL)frameChanged;
 
 @end

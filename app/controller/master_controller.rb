@@ -4,7 +4,12 @@ class MasterController < NSObject
     @@instance = self
     @window = aWindow
     @stack = []
-    push(HomeController.alloc.init)
+    HomeController.alloc.init.show([
+      Section.alloc.initName('영화', ['/Users/apple/hobby/test_jamp/movie']),
+      Section.alloc.initName('TV', []),
+      Section.alloc.initName('음악', []),
+      Section.alloc.initName('설정', [])
+    ])
     self
   end
 

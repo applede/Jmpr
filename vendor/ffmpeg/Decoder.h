@@ -43,7 +43,7 @@
 @property (readonly) SubtitleTrack* subtitleTrack;
 
 // open <-> stop should be matched
-- (void)open:(NSString*)path openGL:(CGLContextObj)cgl;
+- (BOOL)open:(NSString*)path openGL:(CGLContextObj)cgl;
 - (void)stop;
 
 - (void)play;

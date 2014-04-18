@@ -1,18 +1,25 @@
+#
+#  list controller
+#
+#  Created by Jake Song on 2014-04-18.
+#  Copyright (c) 2014 Jake Song. All rights reserved.
+#
+
 class ListController < BaseController
   def makeView(frame)
     ListView.alloc.initWithFrame(frame)
   end
 
-  def section=(section)
+  def enterPressed
+    @playController = PlayController.alloc.init unless @playController
+    @playController.show(@section.items[@view.current])
+  end
+
+  def show(section)
     @section = section
     @section.withItems { |items|
       @view.items = items
     }
-  end
-
-  def enterPressed
-    @playController = PlayController.alloc.init unless @playController
-    @playController.item = @section.items[@view.current]
-    MasterController.push(@playController)
+    super
   end
 end

@@ -80,8 +80,12 @@ class VideoPlayerView < BaseView
 
   def slideIn
     @glLayer.subtitleDelegate = self
-    @glLayer.open(@path)
-    self.didResize
+    if @glLayer.open(@path)
+      self.didResize
+    else
+      @alert = AlertController.alloc.init
+      @alert.show("Can't open #{@path}")
+    end
   end
 
   def willResize
@@ -107,25 +111,6 @@ class VideoPlayerView < BaseView
     end
   end
 
-  # def keyDown(theEvent)
-  #   chars = theEvent.charactersIgnoringModifiers
-  #   case chars.characterAtIndex(0)
-  #   when 109 # m
-  #     @handler.menuPressed
-  #   when 13 # \r
-  #     @handler.enterPressed
-  #   when 32 # space
-  #     self.spacePressed
-  #   when NSLeftArrowFunctionKey
-  #     @handler.leftPressed
-  #   when NSRightArrowFunctionKey
-  #     @handler.rightPressed
-  #   when 27
-  #     @handler.escPressed
-  #   else
-  #   end
-  # end
-
   def menuPressed
     if @controlShown
       @mediaControl.hide
@@ -136,14 +121,6 @@ class VideoPlayerView < BaseView
       @controlShown = true
     end
   end
-
-  # def enterPressed
-  #   self.window.toggleFullScreen(self)
-  # end
-
-  # def escPressed
-  #   self.window.toggleFullScreen(self)
-  # end
 
   def spacePressed
     if @glLayer.isPlaying
