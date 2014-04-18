@@ -84,7 +84,7 @@ class VideoPlayerView < BaseView
       self.didResize
     else
       @alert = AlertController.alloc.init
-      @alert.show("Can't open #{@path}")
+      @alert.show(@glLayer.decoder.errorMessage)
     end
   end
 

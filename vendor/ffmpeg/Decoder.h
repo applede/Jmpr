@@ -41,6 +41,7 @@
 @property (readonly) CircularQueue* subtitleQue;
 @property (readonly) VideoTrack* videoTrack;
 @property (readonly) SubtitleTrack* subtitleTrack;
+@property (readonly) NSString* errorMessage;
 
 // open <-> stop should be matched
 - (BOOL)open:(NSString*)path openGL:(CGLContextObj)cgl;

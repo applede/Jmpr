@@ -163,7 +163,10 @@ NSString* smiPath(NSString* path)
   _formatContext = NULL;
   int err = avformat_open_input(&_formatContext, [filename UTF8String], NULL, NULL);
   if (err < 0) {
-    NSLog(@"avformat_open_input %d", err);
+    char buf[1024];
+    av_strerror(err, buf, sizeof(buf));
+    _errorMessage = [[NSString alloc] initWithUTF8String:buf];
+    NSLog(@"avformat_open_input '%s'", buf);
     return NO;
   }
   err = avformat_find_stream_info(_formatContext, NULL);

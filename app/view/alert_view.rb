@@ -48,4 +48,7 @@ class AlertView < BaseView
 
   def slideIn
   end
+
+  def slideOutSub
+  end
 end
