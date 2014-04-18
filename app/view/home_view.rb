@@ -50,8 +50,8 @@ class HomeView < BaseView
 
   def didResize
     size = self.bounds.size
-    @sectionHeight = size.height * 160 / 1080
-    @sectionWidth = size.width * 400 / 1920
+    @sectionHeight = normalHeight(160)
+    @sectionWidth = normalWidth(400)
     y = @in ? @sectionHeight : -@sectionHeight
     @bar.frame = CGRectMake(0, y, size.width, @sectionHeight)
     x = (size.width - @sectionWidth) / 2

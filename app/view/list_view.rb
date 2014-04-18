@@ -33,9 +33,9 @@ class ListView < BaseView
 
   def didResize
     size = self.bounds.size
-    @listX = size.width * 20 / 1920
-    @listY = size.width * 20 / 1920
-    @listWidth = size.width * 1000 / 1920
+    @listX = normalWidth(20)
+    @listY = normalHeight(20)
+    @listWidth = normalWidth(1000)
     h = size.height - @listY - @listY
     x = @in ? @listX : -@listWidth
     @list.frame = CGRectMake(x, @listY, @listWidth, h)
