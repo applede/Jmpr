@@ -7,7 +7,7 @@
 
 class AlertController < BaseController
   def makeView(frame)
-    AlertView.alloc.initWithFrame(frame)
+    AlertView.alloc.initWithFrame(centerRect(normalWidth(500), normalHeight(250)))
   end
 
   def show(message)
@@ -23,6 +23,6 @@ class AlertController < BaseController
     # self
     MasterController.pop
     # player view
-    MasterController.pop
+    # MasterController.pop
   end
 end

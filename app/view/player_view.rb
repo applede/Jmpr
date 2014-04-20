@@ -83,6 +83,7 @@ class VideoPlayerView < BaseView
     if @glLayer.open(@path)
       self.didResize
     else
+      MasterController.pop
       @alert = AlertController.alloc.init
       @alert.show(@glLayer.decoder.errorMessage)
     end

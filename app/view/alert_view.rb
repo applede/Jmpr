@@ -8,24 +8,29 @@
 class AlertView < BaseView
   def initWithFrame(frame)
     super
-    @alert = BlurLayer.layer
-    @alert.anchorPoint = CGPointMake(0, 0)
-    @alert.cornerRadius = 8
+    self.layer.backgroundColor = NSColor.colorWithCalibratedWhite(0.6, alpha:0.9).CGColor
+    self.layer.shadowColor = NSColor.blackColor.CGColor
+    self.layer.masksToBounds = false
+    self.layer.shadowOpacity = 1.0
+    self.layer.cornerRadius = 8
     @message = newCenterTextLayer
     @message.wrapped = true
     @ok = newCenterTextLayer
     @layers = [@ok]
     didResize
-    self.layer.addSublayer(@alert)
-    @alert.addSublayer(@message)
-    @alert.addSublayer(@ok)
+    self.layer.addSublayer(@message)
+    self.layer.addSublayer(@ok)
     self
+  end
+
+  def makeBackingLayer
+    BlurLayer.layer
   end
 
   def didResize
     alertWidth = normalWidth(500)
     alertHeight = normalHeight(250)
-    @alert.frame = centerRect(alertWidth, alertHeight)
+    self.frame = centerRect(alertWidth, alertHeight)
     xMargin = normalWidth(20)
     yMargin = normalHeight(10)
     buttonHeight = normalHeight(50)

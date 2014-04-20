@@ -28,6 +28,7 @@ class MasterController < NSObject
     return if @stack.length <= 1
     current = @stack.pop
     current.view.slideOut {
+      current.view.removeFromSuperview
       @stack.last.activate
     }
   end

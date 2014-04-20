@@ -22,7 +22,8 @@ class BaseController < NSObject
   def activate
     window = MasterController.window
     window.delegate = self
-    window.contentView = @view
+    # window.contentView = @view
+    window.contentView.addSubview(@view)
     window.makeFirstResponder(@view)
     Dispatch::Queue.main.async {
       @view.slideIn

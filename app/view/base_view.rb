@@ -106,25 +106,4 @@ class BaseView < NSView
 
   def willResize
   end
-
-  # convert x of 1920x1080
-  def normalWidth(x)
-    self.bounds.size.width * x / 1920
-  end
-
-  def normalHeight(y)
-    self.bounds.size.height * y / 1080
-  end
-
-  def centerX(w)
-    (self.bounds.size.width - w) / 2
-  end
-
-  def centerY(h)
-    (self.bounds.size.height - h) / 2
-  end
-
-  def centerRect(w, h)
-    CGRectMake(centerX(w), centerY(h), w, h)
-  end
 end
