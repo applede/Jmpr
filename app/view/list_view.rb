@@ -9,8 +9,8 @@ class ListView < BaseView
   def initWithFrame(frame)
     super
     @list = BlurLayer.layer
-    @list.anchorPoint = CGPointMake(0, 0)
     @list.cornerRadius = 4
+    @alert = AlertLayer.layer
     @layers = []
     didResize
     self.layer.addSublayer(@list)
@@ -48,6 +48,10 @@ class ListView < BaseView
       layer.fontSize = @itemHeight * 0.7
       y -= @itemHeight
     end
+
+    alertWidth = normalWidth(500)
+    alertHeight = normalHeight(250)
+    @alert.frame = centerRect(alertWidth, alertHeight)
   end
 
   def select(i)
@@ -77,5 +81,12 @@ class ListView < BaseView
 
   def current
     @current
+  end
+
+  def showAlert(message)
+    @alert.message = message
+    self.layer.addSublayer(@alert)
+    f = self.window.backingScaleFactor
+    @alert.contentsScale = f
   end
 end

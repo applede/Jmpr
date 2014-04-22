@@ -22,4 +22,15 @@ class ListController < BaseController
     }
     super
   end
+
+  def activate
+    super
+    if @message
+      @view.showAlert(@message)
+    end
+  end
+
+  def setAlert(message)
+    @message = message
+  end
 end

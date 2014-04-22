@@ -65,11 +65,7 @@ class BaseView < NSView
   end
 
   def select(i)
-    layer = @layers[i]
-    layer.foregroundColor = NSColor.whiteColor.CGColor
-    layer.shadowColor = NSColor.whiteColor.CGColor
-    layer.shadowOpacity = 1.0
-    layer.shadowOffset = CGSizeMake(0, 0)
+    highlight(@layers[i])
   end
 
   def unselect(i)

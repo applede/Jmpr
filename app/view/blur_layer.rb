@@ -9,6 +9,7 @@
 class BlurLayer < CALayer
   def init
     super
+    self.anchorPoint = CGPointMake(0, 0)
     self.masksToBounds = true
     self.backgroundColor = NSColor.colorWithCalibratedWhite(0.6, alpha:0.7).CGColor
     self.needsDisplayOnBoundsChange = true

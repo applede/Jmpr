@@ -33,6 +33,10 @@ class MasterController < NSObject
     }
   end
 
+  def last
+    @stack.last
+  end
+
   def window
     @window
   end
@@ -47,5 +51,9 @@ class MasterController < NSObject
 
   def self.pop
     @@instance.pop
+  end
+
+  def self.last
+    @@instance.last
   end
 end

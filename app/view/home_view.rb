@@ -2,7 +2,6 @@ class HomeView < BaseView
   def initWithFrame(frame)
     super
     @bar = BlurLayer.layer
-    @bar.anchorPoint = CGPointMake(0, 0)
     @layers = []
     @current = 0
     didResize

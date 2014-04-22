@@ -40,3 +40,10 @@ def centerRect(w, h)
   y = (size.height - h) / 2
   CGRectMake(x, y, w, h)
 end
+
+def highlight(layer)
+  layer.foregroundColor = NSColor.whiteColor.CGColor
+  layer.shadowColor = NSColor.whiteColor.CGColor
+  layer.shadowOpacity = 1.0
+  layer.shadowOffset = CGSizeMake(0, 0)
+end

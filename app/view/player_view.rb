@@ -84,8 +84,7 @@ class VideoPlayerView < BaseView
       self.didResize
     else
       MasterController.pop
-      @alert = AlertController.alloc.init
-      @alert.show(@glLayer.decoder.errorMessage)
+      MasterController.last.setAlert(@glLayer.decoder.errorMessage)
     end
   end
 

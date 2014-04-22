@@ -8,10 +8,7 @@
 class AlertView < BaseView
   def initWithFrame(frame)
     super
-    self.layer.backgroundColor = NSColor.colorWithCalibratedWhite(0.6, alpha:0.9).CGColor
-    self.layer.shadowColor = NSColor.blackColor.CGColor
-    self.layer.masksToBounds = false
-    self.layer.shadowOpacity = 1.0
+    self.layer.backgroundColor = NSColor.colorWithCalibratedWhite(0.6, alpha:0.8).CGColor
     self.layer.cornerRadius = 8
     @message = newCenterTextLayer
     @message.wrapped = true
